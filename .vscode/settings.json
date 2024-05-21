@@ -3,5 +3,6 @@
 
   "files.associations": {
     "*.css": "tailwindcss"
-  }
+  },
+  "workbench.settings.openDefaultKeybindings": true
 }
