@@ -1,5 +1,6 @@
 'use client';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
@@ -9,8 +10,10 @@ export default function Search({ placeholder }: { placeholder: string }) {
   const { replace } = useRouter();
 
   // Function to process changes to the input field (search box)
-  function handleSearch(term: string) {
-    console.log(term);
+  // Wrap the function in useDebouncedCallback to implement Debouncing with a wait timer of 750ms
+  const handleSearch = useDebouncedCallback((term) => {
+    console.log(`Searching... ${term}`);
+
     // create a new URLSearchParams instance using searchParams
     const params = new URLSearchParams(searchParams);
 
@@ -24,7 +27,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
     }
     // Update the URL with the updated params
     replace(`${pathname}?${params.toString()}`);
-  }
+  }, 750);
 
   return (
     <div className="relative flex flex-1 flex-shrink-0">
