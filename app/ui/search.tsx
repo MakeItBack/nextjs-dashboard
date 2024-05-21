@@ -1,4 +1,4 @@
-'use client';
+'use client'; // client component
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -16,6 +16,9 @@ export default function Search({ placeholder }: { placeholder: string }) {
 
     // create a new URLSearchParams instance using searchParams
     const params = new URLSearchParams(searchParams);
+
+    // A new search resets the the page number to 1
+    params.set('page', '1');
 
     // Now update the params based on the search term
     if (term) {
