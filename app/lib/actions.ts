@@ -10,6 +10,8 @@ But for this course, we'll keep them all organized in a separate file.)
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache'; // Use to trigger new request to server to download fresh data
 import { redirect } from 'next/navigation'; // Use to redirect to a new route (page)
+import { signIn } from '@/auth'; // sign in function exported from auth.ts
+import { AuthError } from 'next-auth';
 
 import { z as zod } from 'zod';
 /* To handle type validation, there are a few options. While you can manually validate types,
@@ -141,4 +143,23 @@ export async function deleteInvoice(id: string) {
   }
 
   revalidatePath('/dashboard/invoices');
+}
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
+  }
 }
